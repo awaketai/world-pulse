@@ -4,17 +4,21 @@ llm:
   model: "gpt-4o-mini"
 
 telegram:
+  api_url: "https://api.telegram.org"
   bot_token: "xxx"
   chat_id: "xxx"
 
 sources:
   hackernews:
     enabled: true
+    api_url: "https://hacker-news.firebaseio.com/v0"
     top_n: 30
   github_trending:
     enabled: true
+    api_url: "https://github.com/trending"
   arxiv:
     enabled: true
+    api_url: "https://export.arxiv.org/api/query"
     categories: ["cs.AI", "cs.CL", "cs.LG"]
     max_results: 20
 

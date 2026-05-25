@@ -25,13 +25,19 @@ PROCESS_PROMPT = """\
         {{
             "index": 0,
             "category": "分类名",
-            "summary": "一句话中文总结（30字以内）",
+            "summary": "中文总结（80-150字，说明这是什么、为什么重要、有什么影响）",
             "score_adjustment": 5
         }}
     ]
 }}
 
-score_adjustment 范围 0-10，10 表示极其重要。
+summary 要求：
+- 说明这个项目/新闻/论文是什么
+- 为什么值得关注
+- 可能带来的影响或意义
+- 不要泛泛而谈，要具体
+
+score_adjustment 范围 0-10，10 表示极其重要（如重大突破、影响行业的发布）。
 
 情报列表：
 {items_text}"""

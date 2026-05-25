@@ -16,8 +16,10 @@ STATIC_DIR = Path(__file__).parent / "static"
 
 CATEGORIES = ["all"] + [c.value for c in Category]
 CATEGORY_NAMES = {"all": "All"}
+CATEGORY_VALUE_TO_DISPLAY = {}
 for c in Category:
     CATEGORY_NAMES[c.value] = c.display_name
+    CATEGORY_VALUE_TO_DISPLAY[c.value] = c.display_name
 
 
 class AskRequest(BaseModel):
@@ -31,13 +33,16 @@ def create_app(db: Database, ask_service: AskService) -> FastAPI:
         app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
 
     @app.get("/", response_class=HTMLResponse)
-    async def index(request: Request):
+    async def index(request: Request, category: str = "all"):
         from jinja2 import Environment, FileSystemLoader
 
         env = Environment(loader=FileSystemLoader(str(TEMPLATES_DIR)), autoescape=True)
         template = env.get_template("index.html")
 
-        items = await db.get_items(limit=200)
+        cat_filter = None
+        if category != "all":
+            cat_filter = CATEGORY_VALUE_TO_DISPLAY.get(category, category)
+        items = await db.get_items(category=cat_filter, limit=200)
         insights = await db.get_daily_insights(limit=7)
 
         html = template.render(
@@ -45,13 +50,14 @@ def create_app(db: Database, ask_service: AskService) -> FastAPI:
             insights=insights,
             categories=CATEGORIES,
             category_names=CATEGORY_NAMES,
-            current_category="all",
+            current_category=category,
         )
         return HTMLResponse(content=html)
 
     @app.get("/api/items")
     async def api_items(category: str | None = None, date: str | None = None, limit: int = 100):
-        items = await db.get_items(category=category, date=date, limit=limit)
+        cat_filter = CATEGORY_VALUE_TO_DISPLAY.get(category, category) if category else None
+        items = await db.get_items(category=cat_filter, date=date, limit=limit)
         return [
             {
                 "id": i.id,

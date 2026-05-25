@@ -54,7 +54,7 @@ telegram:
 ### 运行
 
 ```bash
-python run.py
+python main.py
 ```
 
 启动后会立即采集一次数据，之后按配置的间隔定时采集。Web 界面默认访问 `http://localhost:8080`。

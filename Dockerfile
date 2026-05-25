@@ -8,4 +8,4 @@ RUN pip install --no-cache-dir uv && uv pip install --system -e .
 COPY . .
 RUN mkdir -p data
 
-CMD ["python", "run.py"]
+CMD ["python", "main.py"]

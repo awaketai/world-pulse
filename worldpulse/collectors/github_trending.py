@@ -15,14 +15,16 @@ from worldpulse.models import Item
 
 logger = logging.getLogger(__name__)
 
-GITHUB_TRENDING_URL = "https://github.com/trending"
-
 
 class GitHubTrendingCollector(BaseCollector):
+    def __init__(self, config: dict[str, Any], http_client: httpx.AsyncClient) -> None:
+        super().__init__(config, http_client)
+        self._api_url = config.get("api_url", "https://github.com/trending")
+
     async def collect(self) -> list[Item]:
         try:
             resp = await self._http.get(
-                GITHUB_TRENDING_URL,
+                self._api_url,
                 headers={"Accept": "text/html"},
                 follow_redirects=True,
             )

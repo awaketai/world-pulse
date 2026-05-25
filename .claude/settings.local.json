@@ -6,7 +6,11 @@
       "WebSearch",
       "Bash(pip install *)",
       "Bash(worldpulse *)",
-      "Bash(git add *)"
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(git push *)",
+      "Skill(charlie-munger-perspective)",
+      "Bash(git rm *)"
     ]
   }
 }

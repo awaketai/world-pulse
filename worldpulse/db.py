@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import json
 import logging
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 import aiosqlite
@@ -169,7 +169,7 @@ class Database:
         await self._db.execute(
             """UPDATE items SET category=?, summary=?, score=?, processed_at=?
             WHERE id=?""",
-            (category, summary, score, datetime.utcnow().isoformat(), item_id),
+            (category, summary, score, datetime.now(timezone.utc).isoformat(), item_id),
         )
         await self._db.commit()
 
@@ -211,16 +211,60 @@ class Database:
         self, query: str, days: int = 7, limit: int = 20
     ) -> list[Item]:
         assert self._db is not None
-        since = (datetime.utcnow() - timedelta(days=days)).isoformat()
+        since = (datetime.now(timezone.utc) - timedelta(days=days)).isoformat()
+
+        # Try FTS5 first
+        results = await self._search_fts(query, since, limit)
+        if results:
+            return results
+
+        # Fallback: LIKE search for Chinese/multilingual support
+        return await self._search_like(query, since, limit)
+
+    async def _search_fts(
+        self, query: str, since: str, limit: int
+    ) -> list[Item]:
+        assert self._db is not None
+        try:
+            fts_query = " OR ".join(f'"{w}"' for w in query.split() if len(w) > 1)
+            if not fts_query:
+                return []
+            cursor = await self._db.execute(
+                """SELECT i.* FROM items i
+                JOIN items_fts f ON i.rowid = f.rowid
+                WHERE items_fts MATCH ?
+                AND i.processed_at IS NOT NULL
+                AND i.collected_at >= ?
+                ORDER BY rank
+                LIMIT ?""",
+                (fts_query, since, limit),
+            )
+            rows = await cursor.fetchall()
+            return [_row_to_item(r) for r in rows]
+        except Exception:
+            return []
+
+    async def _search_like(
+        self, query: str, since: str, limit: int
+    ) -> list[Item]:
+        assert self._db is not None
+        words = [w for w in query.split() if len(w) > 1]
+        if not words:
+            words = [query]
+        conditions = []
+        params: list[object] = [since]
+        for word in words:
+            conditions.append("(title LIKE ? OR content LIKE ? OR summary LIKE ?)")
+            params.extend([f"%{word}%", f"%{word}%", f"%{word}%"])
+        where = " OR ".join(conditions)
         cursor = await self._db.execute(
-            """SELECT i.* FROM items i
-            JOIN items_fts f ON i.rowid = f.rowid
-            WHERE items_fts MATCH ?
-            AND i.processed_at IS NOT NULL
-            AND i.collected_at >= ?
-            ORDER BY rank
+            f"""SELECT * FROM items
+            WHERE processed_at IS NOT NULL
+            AND collected_at >= ?
+            AND ({where})
+            ORDER BY score DESC
             LIMIT ?""",
-            (query, since, limit),
+            (*params, limit),
         )
         rows = await cursor.fetchall()
         return [_row_to_item(r) for r in rows]

@@ -9,8 +9,6 @@ from worldpulse.models import DailyInsight, Item
 
 logger = logging.getLogger(__name__)
 
-TELEGRAM_API = "https://api.telegram.org"
-
 
 class TelegramBot:
     def __init__(
@@ -18,6 +16,7 @@ class TelegramBot:
     ) -> None:
         self._token = config.bot_token
         self._chat_id = config.chat_id
+        self._api_url = config.api_url
         self._http = http_client
 
     async def send_daily_report(
@@ -51,7 +50,7 @@ class TelegramBot:
             logger.warning("Telegram not configured, skipping message")
             return
 
-        url = f"{TELEGRAM_API}/bot{self._token}/sendMessage"
+        url = f"{self._api_url}/bot{self._token}/sendMessage"
 
         max_len = 4096
         if len(text) <= max_len:

@@ -14,11 +14,14 @@ from worldpulse.models import Item
 
 logger = logging.getLogger(__name__)
 
-ARXIV_API = "https://export.arxiv.org/api/query"
 ATOM_NS = "{http://www.w3.org/2005/Atom}"
 
 
 class ArxivCollector(BaseCollector):
+    def __init__(self, config: dict[str, Any], http_client: httpx.AsyncClient) -> None:
+        super().__init__(config, http_client)
+        self._api_url = config.get("api_url", "https://export.arxiv.org/api/query")
+
     async def collect(self) -> list[Item]:
         categories = self._config.get("categories", ["cs.AI", "cs.CL", "cs.LG"])
         max_results = self._config.get("max_results", 20)
@@ -33,7 +36,7 @@ class ArxivCollector(BaseCollector):
         }
 
         try:
-            resp = await self._http.get(ARXIV_API, params=params)
+            resp = await self._http.get(self._api_url, params=params)
             resp.raise_for_status()
         except Exception:
             logger.exception("Failed to fetch arXiv")

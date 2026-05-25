@@ -41,7 +41,7 @@ Collectors (HN/GitHub/arXiv) → Dedup → SQLite → AI Processor (LLM) → Tel
 uv pip install -e .
 
 # Run (starts scheduler + web server)
-python run.py
+python main.py
 
 # Docker
 docker compose up

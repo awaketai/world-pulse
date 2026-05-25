@@ -17,22 +17,26 @@ class LLMConfig:
 class TelegramConfig:
     bot_token: str = ""
     chat_id: str = ""
+    api_url: str = "https://api.telegram.org"
 
 
 @dataclass
 class HackerNewsConfig:
     enabled: bool = True
     top_n: int = 30
+    api_url: str = "https://hacker-news.firebaseio.com/v0"
 
 
 @dataclass
 class GitHubTrendingConfig:
     enabled: bool = True
+    api_url: str = "https://github.com/trending"
 
 
 @dataclass
 class ArxivConfig:
     enabled: bool = True
+    api_url: str = "https://export.arxiv.org/api/query"
     categories: list[str] = field(default_factory=lambda: ["cs.AI", "cs.CL", "cs.LG"])
     max_results: int = 20
 
@@ -99,17 +103,21 @@ def load_config(path: str | Path) -> AppConfig:
         telegram=TelegramConfig(
             bot_token=telegram_raw.get("bot_token", ""),
             chat_id=telegram_raw.get("chat_id", ""),
+            api_url=telegram_raw.get("api_url", TelegramConfig.api_url),
         ),
         sources=SourcesConfig(
             hackernews=HackerNewsConfig(
                 enabled=hn_raw.get("enabled", True),
                 top_n=hn_raw.get("top_n", 30),
+                api_url=hn_raw.get("api_url", HackerNewsConfig.api_url),
             ),
             github_trending=GitHubTrendingConfig(
                 enabled=gh_raw.get("enabled", True),
+                api_url=gh_raw.get("api_url", GitHubTrendingConfig.api_url),
             ),
             arxiv=ArxivConfig(
                 enabled=arxiv_raw.get("enabled", True),
+                api_url=arxiv_raw.get("api_url", ArxivConfig.api_url),
                 categories=arxiv_raw.get("categories", ["cs.AI", "cs.CL", "cs.LG"]),
                 max_results=arxiv_raw.get("max_results", 20),
             ),

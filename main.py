@@ -48,12 +48,15 @@ async def _run(config) -> None:
             "hackernews": {
                 "enabled": config.sources.hackernews.enabled,
                 "top_n": config.sources.hackernews.top_n,
+                "api_url": config.sources.hackernews.api_url,
             },
             "github_trending": {
                 "enabled": config.sources.github_trending.enabled,
+                "api_url": config.sources.github_trending.api_url,
             },
             "arxiv": {
                 "enabled": config.sources.arxiv.enabled,
+                "api_url": config.sources.arxiv.api_url,
                 "categories": config.sources.arxiv.categories,
                 "max_results": config.sources.arxiv.max_results,
             },
