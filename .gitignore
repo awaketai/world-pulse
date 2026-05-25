@@ -1,0 +1,44 @@
+# Config (contains API keys)
+config.yaml
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyi
+*.egg-info/
+dist/
+build/
+.eggs/
+*.egg
+*.whl
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# IDE
+.idea/
+.vscode/
+.zed/
+*.swp
+*.swo
+*~
+
+# Tools
+.ruff_cache/
+.pytest_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+
+# Data
+data/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Output
+worldpulse_*.html

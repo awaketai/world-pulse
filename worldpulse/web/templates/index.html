@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>World Pulse - AI 科技情报</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<header>
+  <h1>World Pulse</h1>
+  <p>AI 全球科技情报系统</p>
+</header>
+
+<nav class="tabs">
+  {% for cat in categories %}
+  <a href="?category={{ cat }}" class="tab {% if current_category == cat %}active{% endif %}">
+    {{ category_names[cat] }}
+  </a>
+  {% endfor %}
+</nav>
+
+<main>
+  <section class="items">
+    {% if items %}
+      {% for item in items %}
+      <article class="item" data-category="{{ item.category }}" data-score="{{ item.score }}">
+        <div class="item-meta">
+          <span class="item-category">{{ item.category }}</span>
+          <span class="item-source">{{ item.source }}</span>
+        </div>
+        <h3 class="item-title">
+          {% if item.url %}
+          <a href="{{ item.url }}" target="_blank" rel="noopener">{{ item.title }}</a>
+          {% else %}
+          {{ item.title }}
+          {% endif %}
+        </h3>
+        {% if item.summary %}
+        <p class="item-summary">{{ item.summary }}</p>
+        {% endif %}
+        <div class="item-footer">
+          <span class="item-time">{{ item.collected_at.strftime('%m-%d %H:%M') if item.collected_at else '' }}</span>
+          <span class="item-score">{{ "%.0f"|format(item.score) }}</span>
+        </div>
+      </article>
+      {% endfor %}
+    {% else %}
+      <p class="empty">暂无数据。系统正在采集中...</p>
+    {% endif %}
+  </section>
+
+  {% if insights %}
+  <section class="insights">
+    <h2>Daily Insights</h2>
+    {% for insight in insights %}
+    <div class="insight-card">
+      <h3>{{ insight.date }}</h3>
+      {% if insight.daily_summary %}
+      <div class="insight-summary">{{ insight.daily_summary }}</div>
+      {% endif %}
+      {% if insight.trends %}
+      <div class="insight-trends">{{ insight.trends }}</div>
+      {% endif %}
+      <span class="insight-count">{{ insight.item_count }} items</span>
+    </div>
+    {% endfor %}
+  </section>
+  {% endif %}
+</main>
+
+<section class="ask-section">
+  <h2>追问</h2>
+  <div class="ask-form">
+    <input type="text" id="ask-input" placeholder="输入问题，基于已采集数据回答..." />
+    <button id="ask-btn" onclick="submitAsk()">提问</button>
+  </div>
+  <div id="ask-result" class="ask-result" style="display:none">
+    <div id="ask-answer" class="ask-answer"></div>
+    <div id="ask-sources" class="ask-sources"></div>
+  </div>
+</section>
+
+<footer>
+  <p>World Pulse &copy; 2026</p>
+</footer>
+
+<script>
+async function submitAsk() {
+  const input = document.getElementById('ask-input');
+  const question = input.value.trim();
+  if (!question) return;
+
+  const btn = document.getElementById('ask-btn');
+  btn.disabled = true;
+  btn.textContent = '思考中...';
+
+  const result = document.getElementById('ask-result');
+  const answer = document.getElementById('ask-answer');
+  const sources = document.getElementById('ask-sources');
+
+  try {
+    const resp = await fetch('/api/ask', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ question }),
+    });
+    const data = await resp.json();
+
+    answer.textContent = data.answer;
+    sources.innerHTML = '';
+    if (data.sources && data.sources.length > 0) {
+      const title = document.createElement('p');
+      title.textContent = '相关来源：';
+      sources.appendChild(title);
+      data.sources.forEach(s => {
+        const el = document.createElement('div');
+        el.className = 'ask-source-item';
+        el.innerHTML = '<span class="item-category">' + (s.category || '') + '</span> <a href="' + s.url + '" target="_blank">' + s.title + '</a>';
+        sources.appendChild(el);
+      });
+    }
+    result.style.display = 'block';
+  } catch (e) {
+    answer.textContent = '请求失败，请重试';
+    result.style.display = 'block';
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '提问';
+  }
+}
+
+document.getElementById('ask-input').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') submitAsk();
+});
+</script>
+</body>
+</html>

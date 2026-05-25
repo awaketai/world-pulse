@@ -1,0 +1,289 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background: #0a0a0a;
+  color: #e0e0e0;
+  line-height: 1.6;
+}
+
+header {
+  text-align: center;
+  padding: 2rem 1rem 1rem;
+  border-bottom: 1px solid #1a1a1a;
+}
+
+header h1 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: #fff;
+}
+
+header p {
+  color: #888;
+  font-size: 0.9rem;
+  margin-top: 0.3rem;
+}
+
+.tabs {
+  display: flex;
+  gap: 0;
+  overflow-x: auto;
+  padding: 0 1rem;
+  background: #111;
+  border-bottom: 1px solid #222;
+  -webkit-overflow-scrolling: touch;
+}
+
+.tab {
+  padding: 0.7rem 1rem;
+  color: #888;
+  text-decoration: none;
+  font-size: 0.85rem;
+  white-space: nowrap;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s;
+}
+
+.tab:hover {
+  color: #ccc;
+}
+
+.tab.active {
+  color: #fff;
+  border-bottom-color: #4f8ff7;
+}
+
+main {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+.item {
+  background: #111;
+  border: 1px solid #1a1a1a;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 0.75rem;
+  transition: border-color 0.2s;
+}
+
+.item:hover {
+  border-color: #333;
+}
+
+.item-meta {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.4rem;
+  font-size: 0.75rem;
+}
+
+.item-category {
+  background: #1a2744;
+  color: #4f8ff7;
+  padding: 0.15rem 0.5rem;
+  border-radius: 3px;
+}
+
+.item-source {
+  color: #666;
+  text-transform: uppercase;
+}
+
+.item-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.item-title a {
+  color: #e0e0e0;
+  text-decoration: none;
+}
+
+.item-title a:hover {
+  color: #4f8ff7;
+}
+
+.item-summary {
+  color: #999;
+  font-size: 0.85rem;
+  margin-top: 0.3rem;
+}
+
+.item-footer {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 0.5rem;
+  font-size: 0.75rem;
+  color: #555;
+}
+
+.item-score {
+  color: #4f8ff7;
+  font-weight: 600;
+}
+
+.empty {
+  text-align: center;
+  color: #555;
+  padding: 3rem 1rem;
+}
+
+.insights {
+  margin-top: 2rem;
+}
+
+.insights h2 {
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+  color: #ccc;
+}
+
+.insight-card {
+  background: #111;
+  border: 1px solid #1a1a1a;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.insight-card h3 {
+  font-size: 0.9rem;
+  color: #4f8ff7;
+  margin-bottom: 0.5rem;
+}
+
+.insight-summary {
+  font-size: 0.9rem;
+  white-space: pre-line;
+  color: #ccc;
+}
+
+.insight-trends {
+  font-size: 0.85rem;
+  white-space: pre-line;
+  color: #999;
+  margin-top: 0.5rem;
+}
+
+.insight-count {
+  font-size: 0.75rem;
+  color: #555;
+  margin-top: 0.5rem;
+  display: block;
+}
+
+.ask-section {
+  max-width: 900px;
+  margin: 2rem auto;
+  padding: 0 1rem 2rem;
+}
+
+.ask-section h2 {
+  font-size: 1.2rem;
+  margin-bottom: 0.75rem;
+  color: #ccc;
+}
+
+.ask-form {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.ask-form input {
+  flex: 1;
+  padding: 0.7rem 1rem;
+  background: #111;
+  border: 1px solid #333;
+  border-radius: 6px;
+  color: #e0e0e0;
+  font-size: 0.9rem;
+  outline: none;
+}
+
+.ask-form input:focus {
+  border-color: #4f8ff7;
+}
+
+.ask-form button {
+  padding: 0.7rem 1.5rem;
+  background: #4f8ff7;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.ask-form button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.ask-result {
+  margin-top: 1rem;
+  background: #111;
+  border: 1px solid #1a1a1a;
+  border-radius: 8px;
+  padding: 1rem;
+}
+
+.ask-answer {
+  font-size: 0.9rem;
+  line-height: 1.7;
+  white-space: pre-line;
+}
+
+.ask-sources {
+  margin-top: 1rem;
+  font-size: 0.85rem;
+}
+
+.ask-sources p {
+  color: #888;
+  margin-bottom: 0.5rem;
+}
+
+.ask-source-item {
+  padding: 0.3rem 0;
+  color: #999;
+}
+
+.ask-source-item a {
+  color: #4f8ff7;
+  text-decoration: none;
+}
+
+.ask-source-item a:hover {
+  text-decoration: underline;
+}
+
+footer {
+  text-align: center;
+  padding: 2rem 1rem;
+  color: #444;
+  font-size: 0.8rem;
+  border-top: 1px solid #1a1a1a;
+}
+
+@media (max-width: 600px) {
+  header h1 {
+    font-size: 1.4rem;
+  }
+  .tab {
+    padding: 0.6rem 0.75rem;
+    font-size: 0.8rem;
+  }
+  .ask-form {
+    flex-direction: column;
+  }
+}
